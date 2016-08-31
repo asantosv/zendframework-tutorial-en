@@ -4,12 +4,10 @@ namespace Portal\Controller;
 
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
-use Zend\Authentication\Storage\Session;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
-use Zend\Session\Container as SessionContainer;
 use ZFT\User;
 
 class UserRelatedControllerFactory implements FactoryInterface {
@@ -27,11 +25,10 @@ class UserRelatedControllerFactory implements FactoryInterface {
             throw new ServiceNotFoundException("Requested controller name '".$controllerName."' does not exist.");
         }
 
-        $session = new SessionContainer(Session::NAMESPACE_DEFAULT);
-
         $repository = $serviceManager->get(User\Repository::class);
+        $authService = $serviceManager->get('authentication');
 
-        return new $controllerName($repository, $session);
+        return new $controllerName($repository, $authService);
     }
 
 
